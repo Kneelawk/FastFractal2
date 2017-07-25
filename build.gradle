@@ -1,0 +1,38 @@
+apply plugin: 'scala'
+apply plugin: 'eclipse'
+
+version = '0.0.1'
+
+ext.launcherMain = 'org.kneelawk.fastfractal2.FastFractal2Launcher'
+
+sourceSets {
+	launcher {
+		java {
+			srcDir 'src/launcher/java'
+			srcDir 'CPControl/src/main/java'
+		}
+	}
+}
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	compile 'org.scala-lang:scala-library:2.12.2'
+	compile 'com.typesafe.akka:akka-actor_2.12:2.5.3'
+	compile 'com.typesafe.akka:akka-stream_2.12:2.5.3'
+}
+
+// builds launcher jar
+task launcherJar(type: Jar, dependsOn: [jar, launcherClasses]) {
+	manifest { attributes 'Main-Class': launcherMain }
+	baseName "${project.name}-all"
+	from(configurations.compile) { into 'libs' }
+	from(jar.outputs.files) { into 'app' }
+	from(sourceSets.launcher.output)
+	from('LICENSE')
+	
+	group 'build'
+	description 'Creates a jar with all dependencies included.'
+}
