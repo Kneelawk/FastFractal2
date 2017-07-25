@@ -36,3 +36,5 @@ task launcherJar(type: Jar, dependsOn: [jar, launcherClasses]) {
 	group 'build'
 	description 'Creates a jar with all dependencies included.'
 }
+
+assemble.dependsOn launcherJar
